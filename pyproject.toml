@@ -8,6 +8,7 @@ packages = [{include = "biotic"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+scapy = "^2.5.0"
 
 
 [build-system]
