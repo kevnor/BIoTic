@@ -1,3 +1,6 @@
-from biotic.constants import BANNER_ART
+import os
+import usb.core
+from usb.backend import libusb1
 
-print(BANNER_ART)
+be = libusb1.get_backend()
+dev = usb.core.find(backend=be)

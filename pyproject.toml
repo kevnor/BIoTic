@@ -9,6 +9,11 @@ packages = [{include = "biotic"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 scapy = "^2.5.0"
+argparse = "^1.4.0"
+python3-nmap = "^1.6.0"
+pyshark = "^0.5.3"
+pyusb = "^1.2.1"
+libusb = "^1.0.26b5"
 
 
 [build-system]
