@@ -1,6 +1,12 @@
-import os
 import usb.core
-from usb.backend import libusb1
 
-be = libusb1.get_backend()
-dev = usb.core.find(backend=be)
+# find all USB devices
+devices = usb.core.find(find_all=True)
+
+# iterate over the devices and print their information
+for device in devices:
+    print('Device:', device)
+    print('  - Manufacturer:', usb.util.get_string(device, device.iManufacturer))
+    print('  - Product:', usb.util.get_string(device, device.iProduct))
+    print('  - Serial:', usb.util.get_string(device, device.iSerialNumber))
+    print()
