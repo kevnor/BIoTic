@@ -1,15 +1,28 @@
-import usb.core
-import socket
+import serial
+from xbee import XBee
 
-print(socket.if_nameindex())
+# configure serial communication
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 
-# find all USB devices
-"""devices = usb.core.find(find_all=True)
+# create an XBee object and configure it for API mode
+xbee = XBee(ser, escaped=True)
 
-# iterate over the devices and print their information
-for device in devices:
-    print('Device:', device)
-    print('  - Manufacturer:', usb.util.get_string(device, device.iManufacturer))
-    print('  - Product:', usb.util.get_string(device, device.iProduct))
-    print('  - Serial:', usb.util.get_string(device, device.iSerialNumber))
-    print()"""
+# create a network scan request and send it to the coordinator
+network_scan_request = xbee.build_command('at', command='ND')
+xbee.send(network_scan_request)
+
+# wait for the network scan response
+network_scan_response = xbee.wait_read_frame()
+
+# print the network scan results
+print('Found %d devices:' % (len(network_scan_response['devices']),))
+for device in network_scan_response['devices']:
+    print('- Address: %s, PAN ID: %s, Signal Strength: %d' % (
+        device['source_addr_extended'],
+        device['source_addr'],
+        device['rssi']
+    ))
+
+# clean up the XBee object and serial connection
+xbee.halt()
+ser.close()
