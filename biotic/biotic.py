@@ -1,16 +1,12 @@
-import time
-from digi.xbee.devices import XBeeDevice
+import sys
+from scapy.sendrecv import sniff
+from scapy.config import conf
 
-xbee = XBeeDevice("/dev/tty16", 9600)
+conf.dot15d4_protocol = "zigbee"
 
-# Get the XBee network object from the local XBee.
-xnet = xbee.get_network()
-print(xnet)
 
-# Start the discovery process and wait for it to be over.
-#xnet.start_discovery_process()
-#while xnet.is_discovery_running():
-#    time.sleep(0.5)
+def packet_handler(packet):
+    print(packet.summary())
 
-# Get the list of the nodes in the network.
-#nodes = xnet.get_devices()
+
+sniff(offline=sys.stdin.buffer, prn=packet_handler, store=0)
