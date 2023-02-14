@@ -1,28 +1,15 @@
-import serial
-from xbee import XBee
+import time
+from digi.xbee.devices import XBeeDevice
 
-# configure serial communication
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+xbee = XBeeDevice("/dev/tty16", 9600)
 
-# create an XBee object and configure it for API mode
-xbee = XBee(ser, escaped=True)
+# Get the XBee network object from the local XBee.
+xnet = xbee.get_network()
 
-# create a network scan request and send it to the coordinator
-network_scan_request = xbee.build_command('at', command='ND')
-xbee.send(network_scan_request)
+# Start the discovery process and wait for it to be over.
+xnet.start_discovery_process()
+while xnet.is_discovery_running():
+    time.sleep(0.5)
 
-# wait for the network scan response
-network_scan_response = xbee.wait_read_frame()
-
-# print the network scan results
-print('Found %d devices:' % (len(network_scan_response['devices']),))
-for device in network_scan_response['devices']:
-    print('- Address: %s, PAN ID: %s, Signal Strength: %d' % (
-        device['source_addr_extended'],
-        device['source_addr'],
-        device['rssi']
-    ))
-
-# clean up the XBee object and serial connection
-xbee.halt()
-ser.close()
+# Get the list of the nodes in the network.
+nodes = xnet.get_devices()
