@@ -3,7 +3,7 @@ import time
 from digi.xbee.models.status import NetworkDiscoveryStatus
 from digi.xbee.devices import XBeeDevice
 
-PORT = "COM3"
+PORT = "/dev/tty16"
 BAUD_RATE = "9600"
 
 
